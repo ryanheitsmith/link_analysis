@@ -1,0 +1,60 @@
+---
+title: "linkcomm_tutorial"
+author: "Ryan Heitsmith"
+date: "9/15/2017"
+output: html_document
+---
+This is a first attempt to check out link analysis and think about how it might relate to crime or fraud analysis. Working through examples in the linkcomm r package vignette.
+```{r, echo=FALSE, warning=FALSE}
+#Using the vignette for the linkcomm package available at: https://cran.r-project.org/web/packages/linkcomm/vignettes/linkcomm.pdf
+library(linkcomm)
+```
+
+Glimpse the relationships between members of a Karate class.
+
+```{r, echo=FALSE, warning=FALSE}
+glimpse(karate)
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE}
+#make linkcomm object (prints dendrogram, which I don't find very useful)
+lc <- getLinkCommunities(karate)
+print(lc)
+```
+
+```{r, echo=FALSE, warning=FALSE}
+fruchterman <- plot(lc, type = "graph", layout = layout.fruchterman.reingold)
+fruchterman
+```
+
+From the above Fruchterman plot we can tell that nodes 34, 32, 3, and 1 (among others) have membership in multiple groups and are links between groups.
+
+```{r, echo=FALSE, warning=FALSE}
+spencer <- plot(lc, type = "graph", layout = "spencer.circle", main = "Spencer Circle Links Plot of Karate Data")
+```
+
+Spencer Circle plot seems to be a slightly better way to visualize this dataset. The results are easier to interpret, central nodes easier to identify, and numbering of the separate communities help us differentiate between them. Nodes nearest the middle (32, 28) are most important. Those towards the edges less so.
+
+```{r, echo=FALSE, warning=FALSE}
+#make community membership plot
+com_membership <- plot(lc, type = "members")
+com_membership
+```
+
+This plot makes it easier to tell exactly which communities a given node belongs to.
+
+```{r, echo=FALSE, warning=FALSE}
+#who are our most important nodes
+cc <- getCommunityCentrality(lc)
+head(cc, decreasing = TRUE)
+```
+
+These five are our most important nodes based on their importance to their communities and the importance of the communities to the network. If this were a criminal network, we might target these individuals for arrest first to cause the greatest disruption to criminal operations.
+
+```{r, echo=FALSE, warning=FALSE}
+```
+
+```{r, echo=FALSE, warning=FALSE}
+```
